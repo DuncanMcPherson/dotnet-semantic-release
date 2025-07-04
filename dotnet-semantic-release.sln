@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet-semantic-release", "dotnet-semantic-release\dotnet-semantic-release.csproj", "{8FA6C7C0-BA7E-4875-84CE-678208D6C09B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet-semantic-release", "dotnet-semantic-release.csproj", "{8FA6C7C0-BA7E-4875-84CE-678208D6C09B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
