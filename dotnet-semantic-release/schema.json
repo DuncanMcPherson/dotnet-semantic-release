@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Semantic Release configuration",
+  "type": "object",
+  "properties": {
+    "branches": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "A list of Git branches to release from",
+      "default": ["main"]
+    },
+    "tagFormat": {
+      "type": "string",
+      "description": "Format string used when creating a Git tag (e.g. 'v{version}').",
+      "default": "v{version}"
+    },
+    "pluginConfigs": {
+      "type": "array",
+      "description": "A list of plugins and their options",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Plugin name using default options"
+          },
+          {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Plugin name"
+              },
+              "options": {
+                "type": "object",
+                "description": "Plugin specific configuration"
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "additionalProperties": false
+  }
+}
