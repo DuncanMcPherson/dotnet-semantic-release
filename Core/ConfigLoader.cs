@@ -5,9 +5,9 @@ namespace SemanticRelease.Core;
 
 public class ConfigLoader
 {
-    public async Task<ReleaseConfig?> Load(string workingDir, string? configPath)
+    public async Task<RawConfig?> Load(string workingDir, string? configPath)
     {
-        ReleaseConfig config;
+        RawConfig config;
         string? resolvedConfigPath = null;
 
         if (!string.IsNullOrEmpty(configPath))
@@ -34,10 +34,13 @@ public class ConfigLoader
             try
             {
                 var json = await File.ReadAllTextAsync(resolvedConfigPath);
-                config = JsonSerializer.Deserialize<ReleaseConfig>(json, new JsonSerializerOptions
+                var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
-                }) ?? throw new InvalidOperationException("Failed to deserialize config");
+                };
+                options.Converters.Add(new PluginConfigConverter());
+                config = JsonSerializer.Deserialize<RawConfig>(json, options) ??
+                         throw new InvalidOperationException("Failed to deserialize config");
             }
             catch (Exception e)
             {
@@ -47,7 +50,12 @@ public class ConfigLoader
         }
         else
         {
-            config = new ReleaseConfig("v{version}", null, ["main"]);
+            config = new RawConfig
+            {
+                TagFormat = "v{version}",
+                PluginConfigs = [],
+                Branches = ["main"]
+            };
             await Console.Out.WriteLineAsync("No config file found, using default config");
         }
 

@@ -4,28 +4,34 @@ namespace SemanticRelease.Core;
 
 public class CoreReleaseHandler
 {
-    private readonly ReleaseContext _context;
+    private readonly RawConfig _config;
+    private readonly string _workingDirectory;
+    private ReleaseContext? _context;
 
-    public CoreReleaseHandler(ReleaseContext context)
+    public CoreReleaseHandler(RawConfig config, string workingDirectory)
     {
-        _context = context;
+        _config = config;
+        _workingDirectory = workingDirectory;
     }
 
     // TODO: handle case of isDry
     public async Task RunRelease(bool isCi, bool isDry)
     {
         var lifecycle = new SemanticLifecycle();
+        var nugetFetcher = new NuGetFetcher();
+        var pluginLoader = new PluginLoader(nugetFetcher);
         try
         {
             Console.WriteLine("[semantic-release] Starting release process");
-            if (_context.Config.PluginConfigs != null)
+            if (_config.PluginConfigs != null)
             {
-                foreach (var plugin in _context.Config.PluginConfigs)
+                foreach (var loaded in _config.PluginConfigs.Select(plugin => pluginLoader.LoadPlugin(plugin)))
                 {
-                    // TODO: load plugin binary
+                    loaded.Register(lifecycle);
                 }
             }
 
+            _context = new ReleaseContext(_workingDirectory, _config.ToReleaseConfig());
             Console.WriteLine("[semantic-release] Plugins Loaded successfully");
             Console.WriteLine("[semantic-release] Begin step 'verifyConditions'");
 
@@ -34,23 +40,23 @@ public class CoreReleaseHandler
             if (!await VerifyCommitHistory()) return;
             await lifecycle.RunStep(LifecycleSteps.VerifyConditions, _context);
             Console.WriteLine("[semantic-release] End step 'verifyConditions'");
-            
+
             Console.WriteLine("[semantic-release] Begin step 'analyzeCommits'");
             await lifecycle.RunStep(LifecycleSteps.AnalyzeCommits, _context);
             Console.WriteLine("[semantic-release] End step 'analyzeCommits'");
-            
+
             Console.WriteLine("[semantic-release] Begin step 'generateNotes'");
             await lifecycle.RunStep(LifecycleSteps.GenerateNotes, _context);
             Console.WriteLine("[semantic-release] End step 'generateNotes'");
-            
+
             Console.WriteLine("[semantic-release] Begin step 'prepare'");
             await lifecycle.RunStep(LifecycleSteps.Prepare, _context);
             Console.WriteLine("[semantic-release] End step 'prepare'");
-            
+
             Console.WriteLine("[semantic-release] Begin step 'publish'");
             await lifecycle.RunStep(LifecycleSteps.Publish, _context);
             Console.WriteLine("[semantic-release] End step 'publish'");
-            
+
             Console.WriteLine("[semantic-release] Begin step 'success'");
             await lifecycle.RunStep(LifecycleSteps.Success, _context);
             Console.WriteLine("[semantic-release] End step 'success'");
@@ -58,10 +64,10 @@ public class CoreReleaseHandler
         catch (Exception e)
         {
             Console.WriteLine($"[semantic-release] Failed to run release: {e.Message}");
-            await lifecycle.RunStep(LifecycleSteps.Fail, _context);
+            await lifecycle.RunStep(LifecycleSteps.Fail, _context ?? new ReleaseContext(_workingDirectory, _config.ToReleaseConfig()));
         }
     }
-    
+
     private async Task<bool> VerifyGitRepo()
     {
         var result = await GitCommand("rev-parse --is-inside-work-tree");
@@ -69,7 +75,7 @@ public class CoreReleaseHandler
         await Console.Error.WriteLineAsync("[semantic-release] Not a git repository");
         return false;
     }
-    
+
     private async Task<bool> VerifyBranch()
     {
         var result = await GitCommand("rev-parse --abbrev-ref HEAD");
@@ -80,7 +86,7 @@ public class CoreReleaseHandler
         }
 
         var branch = result.Output.Trim();
-        if (_context.Config.Branches.Contains(branch)) return true;
+        if (_config.Branches!.Contains(branch)) return true;
         await Console.Error.WriteLineAsync(
             $"[semantic-release] Branch '{branch}' is not a configured release branch");
         return false;

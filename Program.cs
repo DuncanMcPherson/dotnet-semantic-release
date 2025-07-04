@@ -57,8 +57,7 @@ internal static class Program
                 Environment.Exit(1);
                 return;
             }
-            var context = new ReleaseContext(workingDir, config);
-            var releaseHandler = new CoreReleaseHandler(context);
+            var releaseHandler = new CoreReleaseHandler(config, workingDir);
             await releaseHandler.RunRelease(isCi, isDry);
         });
 

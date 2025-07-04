@@ -8,9 +8,16 @@
         <RootNamespace>SemanticRelease</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Authors>Duncan McPherson</Authors>
+        <Description>An extensible tool to configure semantic versioning and releasing products</Description>
+        <PackageProjectUrl>https://github.com/DuncanMcPherson/dotnet-semantic-release</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/DuncanMcPherson/dotnet-semantic-release</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="NuGet.Configuration" Version="6.14.0" />
+      <PackageReference Include="NuGet.Packaging" Version="6.14.0" />
+      <PackageReference Include="NuGet.Protocol" Version="6.14.0" />
       <PackageReference Include="SemanticRelease.Abstractions" Version="1.0.1" />
       <PackageReference Include="System.CommandLine" Version="2.0.0-beta5.25306.1" />
       <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta5.25306.1" />
