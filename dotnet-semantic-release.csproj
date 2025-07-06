@@ -12,7 +12,14 @@
         <Description>An extensible tool to configure semantic versioning and releasing products</Description>
         <PackageProjectUrl>https://github.com/DuncanMcPherson/dotnet-semantic-release</PackageProjectUrl>
         <RepositoryUrl>https://github.com/DuncanMcPherson/dotnet-semantic-release</RepositoryUrl>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <None Include="LICENSE" Pack="true" PackagePath="" />
+        <None Include="README.md" Pack="true" PackagePath="" />
+    </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="NuGet.Configuration" Version="6.14.0" />
