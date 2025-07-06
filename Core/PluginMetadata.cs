@@ -2,6 +2,6 @@ namespace SemanticRelease.Core;
 
 public class PluginMetadata
 {
-    public string Name { get; set; }
-    public object Options { get; set; }
+    public required string Name { get; set; }
+    public required object Options { get; set; }
 }
