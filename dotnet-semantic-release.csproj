@@ -19,15 +19,25 @@
     <ItemGroup>
         <None Include="LICENSE" Pack="true" PackagePath="" />
         <None Include="README.md" Pack="true" PackagePath="" />
+        <None Remove="Test\**" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="NuGet.Configuration" Version="6.14.0" />
       <PackageReference Include="NuGet.Packaging" Version="6.14.0" />
       <PackageReference Include="NuGet.Protocol" Version="6.14.0" />
-      <PackageReference Include="SemanticRelease.Abstractions" Version="1.0.1" />
+      <PackageReference Include="SemanticRelease.Abstractions" Version="1.1.0" />
+      <PackageReference Include="SemanticRelease.CoreBehavior" Version="1.0.3" />
       <PackageReference Include="System.CommandLine" Version="2.0.0-beta5.25306.1" />
       <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta5.25306.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Test\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Test\**" />
     </ItemGroup>
 
 </Project>

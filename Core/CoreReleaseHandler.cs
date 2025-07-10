@@ -20,6 +20,8 @@ public class CoreReleaseHandler
         var lifecycle = new SemanticLifecycle();
         var nugetFetcher = new NuGetFetcher();
         var pluginLoader = new PluginLoader(nugetFetcher);
+        var corePlugin = new CorePlugin();
+        corePlugin.Register(lifecycle);
         try
         {
             Console.WriteLine("[semantic-release] Starting release process");

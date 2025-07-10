@@ -58,7 +58,18 @@ public class NuGetFetcher : INugetFetcher
         Directory.CreateDirectory(targetDir);
 
         using var reader = new PackageArchiveReader(packageStream);
-        _ = await reader.GetPackageFilesAsync(PackageSaveMode.Files, CancellationToken.None);
+        reader.CopyFiles(
+            targetDir,
+            await reader.GetPackageFilesAsync(PackageSaveMode.Files, CancellationToken.None),
+            (sourcePath, destinationPath, stream) =>
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+                using var destinationStream = File.Create(destinationPath);
+                stream.CopyTo(destinationStream);
+                return destinationPath;
+            },
+            NullLogger.Instance,
+            CancellationToken.None);
         var dllPath = Directory.GetFiles(targetDir, "*.dll", SearchOption.AllDirectories)
             .FirstOrDefault(path =>
                 Path.GetFileNameWithoutExtension(path).Equals(packageName, StringComparison.OrdinalIgnoreCase));

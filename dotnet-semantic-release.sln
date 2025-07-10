@@ -2,6 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnet-semantic-release", "dotnet-semantic-release.csproj", "{8FA6C7C0-BA7E-4875-84CE-678208D6C09B}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A9F3A596-2E15-4182-91DB-C53BE1976E0F}"
+	ProjectSection(SolutionItems) = preProject
+		Test\semantic-release.json = Test\semantic-release.json
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
