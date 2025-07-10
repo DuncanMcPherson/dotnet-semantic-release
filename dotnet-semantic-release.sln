@@ -7,6 +7,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A9F3A596-2
 		Test\semantic-release.json = Test\semantic-release.json
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".circleci", ".circleci", "{52990009-AB1E-48E0-BD90-96AE3919CD8B}"
+	ProjectSection(SolutionItems) = preProject
+		.circleci\config.yml = .circleci\config.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{B15C7E15-73FE-46E5-9458-CCD1FCD48FEA}"
+	ProjectSection(SolutionItems) = preProject
+		scripts\build-and-pack.sh = scripts\build-and-pack.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
