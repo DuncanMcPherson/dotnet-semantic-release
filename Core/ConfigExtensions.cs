@@ -22,4 +22,6 @@ public static class ConfigExtensions
 
         return new ReleaseConfig(config.TagFormat ?? "v{version}", plugins, config.Branches?.ToList() ?? ["main"]);
     }
+    
+    public static bool IsNullOrEmpty(this string? str) => string.IsNullOrEmpty(str);
 }

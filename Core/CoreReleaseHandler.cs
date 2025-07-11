@@ -33,7 +33,7 @@ public class CoreReleaseHandler
                 }
             }
 
-            _context = new ReleaseContext(_workingDirectory, _config.ToReleaseConfig());
+            _context = new ReleaseContext(_workingDirectory, _config.ToReleaseConfig(), isDry);
             Console.WriteLine("[semantic-release] Plugins Loaded successfully");
             Console.WriteLine("[semantic-release] Begin step 'verifyConditions'");
 
