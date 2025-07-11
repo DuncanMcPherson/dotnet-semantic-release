@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <PackAsTool>true</PackAsTool>
-        <ToolCommandName>semantic-release</ToolCommandName>
+        <ToolCommandName>dotnet-semantic-release</ToolCommandName>
         <OutputType>Exe</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>SemanticRelease</RootNamespace>
