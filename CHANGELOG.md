@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/DuncanMcPherson/dotnet-semantic-release/compare/v1.1.1...v1.2.0) (2025-07-11)
+
+
+### Features
+
+* Add support for versioned plugins and dry-run ([b7d94c3](https://github.com/DuncanMcPherson/dotnet-semantic-release/commit/b7d94c30a4fa9877eadae1c153d1454572490d57))
+
 ## [1.1.1](https://github.com/DuncanMcPherson/dotnet-semantic-release/compare/v1.1.0...v1.1.1) (2025-07-11)
 
 
