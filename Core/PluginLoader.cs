@@ -20,27 +20,35 @@ public class PluginLoader
 
     public ISemanticPlugin LoadPlugin(RawPluginData pluginConfig)
     {
-        var pluginName = ExtractPluginName(pluginConfig);
-        var dllPath = LocatePluginAssembly(pluginName)
-                      ?? _nuGetFetcher.FetchAndExtract(pluginName).GetAwaiter().GetResult()
+        var (pluginName, version) = ExtractPluginName(pluginConfig);
+        var dllPath = LocatePluginAssembly(pluginName, version)
+                      ?? _nuGetFetcher.FetchAndExtract(pluginName, version).GetAwaiter().GetResult()
                       ?? throw new FileNotFoundException($"Unable to locate plugin DLL for '{pluginName}'");
         return LoadSemanticPlugin(dllPath);
     }
 
-    private string ExtractPluginName(RawPluginData pluginConfig)
+    private (string, string?) ExtractPluginName(RawPluginData pluginConfig)
     {
-        return pluginConfig.IsString ? pluginConfig.PluginName! : pluginConfig.Metadata!.Name;
+        var plugin = pluginConfig.IsString ? pluginConfig.PluginName! : pluginConfig.Metadata!.Name;
+        var version = plugin.Contains("@") ? plugin.Split('@')[1] : null;
+        if (!version.IsNullOrEmpty() && !NuGet.Versioning.NuGetVersion.TryParse(version, out _))
+        {
+            throw new ArgumentException($"Invalid version specified for plugin '{plugin}'");
+        }
+        return (plugin.Split('@')[0], version);
     }
 
-    private string? LocatePluginAssembly(string pluginName)
+    private string? LocatePluginAssembly(string pluginName, string? version)
     {
         return (from basePath in _pluginSearchPaths
-                select Path.Combine(basePath, pluginName.ToLower())
-                into packageDir
-                where Directory.Exists(packageDir)
-                select Directory.GetFiles(packageDir, "*.dll", SearchOption.AllDirectories)
-                    .FirstOrDefault(x => Path.GetFileNameWithoutExtension(x).Equals(pluginName, StringComparison.OrdinalIgnoreCase)))
-            .FirstOrDefault();
+                let pluginDir = Path.Combine(basePath, pluginName.ToLower())
+                let versionDir = version != null ? Path.Combine(pluginDir, version) : null
+                let searchRoot = versionDir ?? pluginDir
+                where Directory.Exists(searchRoot)
+                let dllPath = Directory.GetFiles(searchRoot, $"{pluginName}.dll", SearchOption.AllDirectories)
+                    .FirstOrDefault()
+                where dllPath != null
+                select dllPath).FirstOrDefault();
     }
 
     private ISemanticPlugin LoadSemanticPlugin(string dllPath)
